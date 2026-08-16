@@ -1,3 +1,5 @@
+import type { Fetcher } from "@cloudflare/workers-types";
+
 interface Env {
   ASSETS: Fetcher;
 }
@@ -21,12 +23,12 @@ export default {
     const url = new URL(request.url);
     const pathname = url.pathname;
 
-    // These belong to React
+    // React routes
     if (REACT_ROUTES.has(pathname)) {
       return env.ASSETS.fetch(request);
     }
 
-    // Static files belong to React
+    // Static frontend files
     if (
       pathname.startsWith("/assets/") ||
       pathname.startsWith("/images/") ||
@@ -36,7 +38,7 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
-    // Everything else is a short URL
+    // Short URL → FastAPI
     const backendUrl =
       API_BASE_URL + pathname + url.search;
 
