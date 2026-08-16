@@ -38,7 +38,7 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
-    // Short URL → FastAPI
+    // Everything else = short URL
     const backendUrl =
       API_BASE_URL + pathname + url.search;
 
