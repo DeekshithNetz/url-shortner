@@ -15,6 +15,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.52.1",
     "@eslint/js": "^10.0.1",
     "@types/http-proxy": "^1.17.17",
     "@types/node": "^24.13.3",
