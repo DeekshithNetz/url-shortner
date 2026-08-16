@@ -26,7 +26,6 @@ app.add_middleware(
 
 
 
-
 @app.get("/health")
 def health_check():
     print("done")
