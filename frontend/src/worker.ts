@@ -1,7 +1,7 @@
-import type { Fetcher } from "@cloudflare/workers-types";
-
 interface Env {
-  ASSETS: Fetcher;
+  ASSETS: {
+    fetch(request: Request): Promise<Response>;
+  };
 }
 
 const API_BASE_URL = "https://url-shortner-ajqh.onrender.com";
@@ -28,7 +28,7 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
-    // Static frontend files
+    // Static files
     if (
       pathname.startsWith("/assets/") ||
       pathname.startsWith("/images/") ||
