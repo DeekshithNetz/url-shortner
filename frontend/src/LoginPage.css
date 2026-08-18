@@ -60,7 +60,7 @@ body {
   bottom: -150px; right: -150px;
 }
 
-/* ─── HEADER (Matches Dashboard) ─── */
+/* ─── HEADER (Matches Dashboard Mobile Sizes) ─── */
 .lp__hdr {
   position: relative;
   z-index: 10;
@@ -80,11 +80,12 @@ body {
 }
 @keyframes grad { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
+/* ★ Tighter mobile padding matching App.css */
 .lp__hdr-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
-  height: 64px;
+  padding: 0 20px;
+  height: 60px;
   display: flex;
   align-items: center;
 }
@@ -103,12 +104,13 @@ body {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 48px;
+  /* ★ Tighter mobile gaps */
+  gap: 32px;
   align-items: center;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 48px 24px;
+  padding: 32px 20px;
 }
 
 /* ─── LEFT: STORYTELLING COPY ─── */
@@ -133,7 +135,7 @@ body {
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--blue);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 .lp__badge-dot {
   width: 7px; height: 7px;
@@ -143,31 +145,34 @@ body {
 }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+/* ★ Slightly smaller base title for mobile */
 .lp__title {
-  font-size: 2.25rem;
+  font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.04em;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--t1);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .lp__title-accent {
   color: var(--blue);
 }
 
+/* ★ Tighter margins for mobile */
 .lp__desc {
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--t2);
   line-height: 1.6;
   max-width: 480px;
-  margin: 0 auto 36px;
+  margin: 0 auto 28px;
 }
 
 /* Features List */
 .lp__features {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* ★ Tighter gap */
+  gap: 16px;
   text-align: left;
   max-width: 400px;
   margin: 0 auto;
@@ -176,14 +181,14 @@ body {
 .lp__feat {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
 }
 
 .lp__feat-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px; height: 40px;
+  width: 36px; height: 36px;
   border-radius: var(--r3);
   flex-shrink: 0;
   margin-top: 2px;
@@ -194,13 +199,13 @@ body {
 
 .lp__feat strong {
   display: block;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   font-weight: 650;
   color: var(--t1);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 .lp__feat p {
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   color: var(--t3);
   line-height: 1.4;
 }
@@ -212,6 +217,7 @@ body {
   animation: fadeUp 0.6s var(--e) 0.15s both;
 }
 
+/* ★ Tighter card padding for mobile */
 .lp__card {
   width: 100%;
   max-width: 420px;
@@ -219,44 +225,45 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--r5);
   box-shadow: var(--sh3);
-  padding: 40px 24px 36px;
+  padding: 28px 20px 28px;
   text-align: center;
 }
 
+/* ★ Slightly smaller icon for mobile */
 .lp__card-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 52px; height: 52px;
+  width: 44px; height: 44px;
   background: var(--t1);
   border-radius: 14px;
   color: #fff;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .lp__card-title {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.03em;
   margin-bottom: 8px;
 }
 
 .lp__card-sub {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--t2);
   line-height: 1.5;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .lp__card-action {
   display: flex;
   justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .lp__card-foot {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 500;
   color: var(--t3);
   text-transform: uppercase;
@@ -267,7 +274,7 @@ body {
 .lp__ftr {
   position: relative;
   z-index: 10;
-  padding: 20px 0;
+  padding: 24px 16px 20px;
   border-top: 1px solid var(--border-l);
 }
 .lp__ftr-in {
@@ -285,6 +292,7 @@ body {
    RESPONSIVE: TABLET & DESKTOP SPLIT LAYOUT
    ═══════════════════════════════════════════ */
 @media (min-width: 768px) {
+  /* Match dashboard exact header sizing */
   .lp__hdr-inner { padding: 0 40px; height: 72px; }
   
   /* Switch to 2-column grid */
@@ -297,10 +305,23 @@ body {
 
   .lp__story { text-align: left; }
   .lp__desc { margin: 0 0 36px 0; }
-  .lp__features { margin: 0; }
+  .lp__features { margin: 0; gap: 20px; }
   
+  /* Restore larger desktop card sizes */
   .lp__card { padding: 48px 40px 40px; }
-  .lp__title { font-size: 2.8rem; }
+  .lp__card-icon { width: 52px; height: 52px; margin-bottom: 24px; }
+  .lp__card-title { font-size: 1.25rem; }
+  .lp__card-sub { font-size: 0.85rem; margin-bottom: 32px; }
+  .lp__card-action { margin-bottom: 28px; }
+  .lp__card-foot { font-size: 0.7rem; }
+  
+  /* Restore larger desktop text sizes */
+  .lp__title { font-size: 2.8rem; margin-bottom: 16px; }
+  .lp__desc { font-size: 0.95rem; margin-bottom: 36px; }
+  .lp__feat-icon { width: 40px; height: 40px; }
+  .lp__feat strong { font-size: 0.88rem; }
+  .lp__feat p { font-size: 0.8rem; }
+  .lp__badge { margin-bottom: 24px; }
 }
 
 /* ═══════════════════════════════════════════
@@ -315,10 +336,36 @@ body {
   .lp__desc { font-size: 1.05rem; max-width: 520px; }
 }
 
-/* Tiny screens Google button fix */
-@media (max-width: 360px) {
+/* ═══════════════════════════════════════════
+   MOBILE MICRO-ADJUSTMENTS: < 400px
+   Perfect for iPhone SE / Small Androids
+   ═══════════════════════════════════════════ */
+@media (max-width: 400px) {
+  .lp__hdr-inner { padding: 0 16px; height: 56px; }
+  
+  .lp__main { 
+    padding: 24px 16px; 
+    gap: 24px; 
+  }
+  
+  .lp__title { font-size: 1.6rem; }
+  .lp__desc { font-size: 0.82rem; margin-bottom: 20px; }
+  
+  .lp__features { gap: 14px; }
+  .lp__feat { gap: 10px; }
+  .lp__feat-icon { width: 32px; height: 32px; }
+  .lp__feat-icon svg { width: 16px; height: 16px; }
+  .lp__feat strong { font-size: 0.8rem; }
+  .lp__feat p { font-size: 0.72rem; }
+  
+  .lp__card { padding: 24px 16px; }
+  .lp__card-icon { width: 40px; height: 40px; margin-bottom: 16px; }
+  .lp__card-title { font-size: 1.1rem; }
+  .lp__card-sub { margin-bottom: 20px; font-size: 0.78rem; }
+  
+  /* Shrink Google button slightly so it doesn't overflow */
   .lp__card-action > div {
-    transform: scale(0.9);
+    transform: scale(0.92);
     transform-origin: center center;
   }
 }
