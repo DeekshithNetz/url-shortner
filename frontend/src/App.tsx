@@ -19,29 +19,31 @@ function App() {
   const [urls, setUrls] = useState<URLItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("access_token")
-    );
+  );
+
   const handleLogin = (newToken: string) => {
-      setToken(newToken);
-    };
+    localStorage.setItem("access_token", newToken);
+    setToken(newToken);
+  };
 
-    const handleLogout = () => {
-      localStorage.removeItem("access_token");
-      setToken(null);
-    };
-
-    // Not logged in
-    if (!token) {
-      return <LoginPage onLogin={handleLogin} />;
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    setToken(null);
+    setUrls([]);
+  };
 
   async function loadUrls() {
     try {
-      console.log("requesr");
+      setError("");
+
       const data = await getAllUrls();
+
       setUrls(data);
-    } catch {
+    } catch (error) {
+      console.error(error);
       setError("Failed to load URLs");
     }
   }
@@ -58,20 +60,35 @@ function App() {
       setUrl("");
 
       await loadUrls();
-    } catch {
+    } catch (error) {
+      console.error(error);
       setError("Failed to shorten URL");
     } finally {
       setLoading(false);
     }
   }
 
+  // IMPORTANT: hook must be before conditional return
   useEffect(() => {
-    loadUrls();
-  }, []);
+    if (token) {
+      loadUrls();
+    }
+  }, [token]);
+
+  if (!token) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
 
   return (
     <div>
       <h1>URL Shortener</h1>
+
+      <button onClick={handleLogout}>
+        Logout
+      </button>
+
+      <br />
+      <br />
 
       <input
         type="url"
@@ -114,10 +131,6 @@ function App() {
           </p>
         </div>
       ))}
-      <button onClick={handleLogout}>
-        Logout
-      </button>
-
     </div>
   );
 }
