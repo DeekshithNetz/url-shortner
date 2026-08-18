@@ -14,6 +14,13 @@ type URLItem = {
   created_at: string;
 };
 
+type User = {
+  id: number;
+  email: string;
+  name: string | null;
+  profile_picture: string | null;
+};
+
 function App() {
   const [url, setUrl] = useState("");
   const [urls, setUrls] = useState<URLItem[]>([]);
@@ -24,14 +31,30 @@ function App() {
     localStorage.getItem("access_token")
   );
 
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem("user");
+
+    return savedUser
+      ? JSON.parse(savedUser)
+      : null;
+  });
+
   const handleLogin = (newToken: string) => {
-    localStorage.setItem("access_token", newToken);
     setToken(newToken);
+
+    const savedUser = localStorage.getItem("user");
+
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
   };
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+
     setToken(null);
+    setUser(null);
     setUrls([]);
   };
 
@@ -68,7 +91,6 @@ function App() {
     }
   }
 
-  // IMPORTANT: hook must be before conditional return
   useEffect(() => {
     if (token) {
       loadUrls();
@@ -81,14 +103,36 @@ function App() {
 
   return (
     <div>
-      <h1>URL Shortener</h1>
+      {/* USER DETAILS */}
+      {user && (
+        <div>
+          {user.profile_picture && (
+            <img
+              src={user.profile_picture}
+              alt={user.name || "User"}
+              width={50}
+              height={50}
+              style={{
+                borderRadius: "50%",
+              }}
+            />
+          )}
+
+          <h2>
+            Welcome, {user.name || "User"}
+          </h2>
+
+          <p>{user.email}</p>
+        </div>
+      )}
 
       <button onClick={handleLogout}>
         Logout
       </button>
 
-      <br />
-      <br />
+      <hr />
+
+      <h1>URL Shortener</h1>
 
       <input
         type="url"
@@ -129,6 +173,8 @@ function App() {
           <p>
             Clicks: {item.click_count}
           </p>
+
+          <hr />
         </div>
       ))}
     </div>
