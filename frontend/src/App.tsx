@@ -3,6 +3,7 @@ import {
   createShortUrl,
   getAllUrls,
 } from "./services/api";
+import LoginPage from "./LoginPage";
 
 type URLItem = {
   id: number;
@@ -18,6 +19,22 @@ function App() {
   const [urls, setUrls] = useState<URLItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("access_token")
+    );
+  const handleLogin = (newToken: string) => {
+      setToken(newToken);
+    };
+
+    const handleLogout = () => {
+      localStorage.removeItem("access_token");
+      setToken(null);
+    };
+
+    // Not logged in
+    if (!token) {
+      return <LoginPage onLogin={handleLogin} />;
+    }
 
   async function loadUrls() {
     try {
@@ -97,6 +114,10 @@ function App() {
           </p>
         </div>
       ))}
+      <button onClick={handleLogout}>
+        Logout
+      </button>
+
     </div>
   );
 }
