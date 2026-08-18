@@ -22,6 +22,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       const data = await response.json();
 
+      console.log("LOGIN RESPONSE:", data);
+
       if (!response.ok) {
         throw new Error(
           data.detail || "Google login failed"
@@ -31,6 +33,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
       localStorage.setItem(
         "access_token",
         data.access_token
+      );
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
       );
 
       onLogin(data.access_token);
