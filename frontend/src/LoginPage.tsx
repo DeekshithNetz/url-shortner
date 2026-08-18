@@ -59,7 +59,10 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         
         {/* Left: The Story / Marketing Copy */}
         <section className="lp__story">
-          
+          <div className="lp__badge">
+            <span className="lp__badge-dot"></span>
+            Now in public beta
+          </div>
           
           <h1 className="lp__title">
             Shorten your links.<br />
@@ -83,7 +86,18 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               </div>
             </div>
             
-          
+            <div className="lp__feat">
+              <div className="lp__feat-icon lp__feat-icon--green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+              </div>
+              <div>
+                <strong>Deep Analytics</strong>
+                <p>Track clicks, locations, and devices.</p>
+              </div>
+            </div>
+
             <div className="lp__feat">
               <div className="lp__feat-icon lp__feat-icon--violet">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -119,9 +133,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 onError={() => console.log("Login Failed")}
                 theme="outline"
                 size="large"
-                text="signin_with"
+                text="continue_with"
                 shape="rectangular"
-                width="340"
               />
             </div>
 
@@ -133,7 +146,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
 
       </main>
 
-      {/* Footer matching App exactly */}
+      {/* Footer */}
       <footer className="lp__ftr">
         <div className="lp__ftr-in">
           <span className="lp__ftr-b">Sniply</span>

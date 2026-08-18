@@ -23,6 +23,7 @@
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: hidden; } /* ★ CRITICAL: Stops side-scrolling globally */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
@@ -36,9 +37,10 @@ body {
   flex-direction: column;
   min-height: 100dvh;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden; /* ★ CRITICAL: Stops side-scrolling on page */
   background: var(--bg);
   color: var(--t1);
+  width: 100%;
 }
 
 /* Subtle Light Background Shapes */
@@ -68,6 +70,7 @@ body {
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--border-l);
+  width: 100%;
 }
 .lp__hdr::before {
   content: '';
@@ -80,11 +83,10 @@ body {
 }
 @keyframes grad { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
-/* ★ Tighter mobile padding matching App.css */
 .lp__hdr-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px; /* ★ Safe 16px base for 320px screens */
   height: 60px;
   display: flex;
   align-items: center;
@@ -92,10 +94,10 @@ body {
 .lp__brand { display: flex; align-items: center; gap: 10px; }
 .lp__logo {
   display: flex; align-items: center; justify-content: center;
-  width: 32px; height: 32px;
+  width: 30px; height: 30px; /* ★ Slightly smaller base for mobile */
   background: var(--t1); border-radius: var(--r2); color: #fff;
 }
-.lp__name { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+.lp__name { font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
 
 /* ─── MAIN GRID ─── */
 .lp__main {
@@ -104,13 +106,13 @@ body {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr;
-  /* ★ Tighter mobile gaps */
   gap: 32px;
   align-items: center;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 32px 20px;
+  padding: 28px 16px; /* ★ Safe 16px base */
+  overflow-x: hidden; /* ★ CRITICAL: Stops side-scrolling in main */
 }
 
 /* ─── LEFT: STORYTELLING COPY ─── */
@@ -127,68 +129,63 @@ body {
 .lp__badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 16px 6px 10px;
+  gap: 6px;
+  padding: 5px 12px 5px 8px;
   background: var(--blue-sf);
   border: 1px solid var(--blue-rng);
   border-radius: 100px;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 500;
   color: var(--blue);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .lp__badge-dot {
-  width: 7px; height: 7px;
+  width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--blue);
   animation: pulse-dot 2s ease-in-out infinite;
 }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-/* ★ Slightly smaller base title for mobile */
 .lp__title {
-  font-size: 1.85rem;
+  font-size: 1.75rem;
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.15;
   color: var(--t1);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
-.lp__title-accent {
-  color: var(--blue);
-}
+.lp__title-accent { color: var(--blue); }
 
-/* ★ Tighter margins for mobile */
 .lp__desc {
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   color: var(--t2);
-  line-height: 1.6;
+  line-height: 1.55;
   max-width: 480px;
-  margin: 0 auto 28px;
+  margin: 0 auto 24px;
 }
 
 /* Features List */
 .lp__features {
   display: flex;
   flex-direction: column;
-  /* ★ Tighter gap */
-  gap: 16px;
+  gap: 14px;
   text-align: left;
-  max-width: 400px;
+  max-width: 100%; /* ★ Allow it to flex naturally */
   margin: 0 auto;
 }
 
 .lp__feat {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 10px;
 }
 
 .lp__feat-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px; height: 36px;
+  width: 34px; height: 34px; /* ★ Compact for mobile */
   border-radius: var(--r3);
   flex-shrink: 0;
   margin-top: 2px;
@@ -199,13 +196,13 @@ body {
 
 .lp__feat strong {
   display: block;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 650;
   color: var(--t1);
   margin-bottom: 1px;
 }
 .lp__feat p {
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   color: var(--t3);
   line-height: 1.4;
 }
@@ -214,60 +211,64 @@ body {
 .lp__form-side {
   display: flex;
   justify-content: center;
+  width: 100%;
   animation: fadeUp 0.6s var(--e) 0.15s both;
 }
 
-/* ★ Tighter card padding for mobile */
 .lp__card {
   width: 100%;
-  max-width: 420px;
+  max-width: 100%; /* ★ CRITICAL: Never exceed parent width */
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r5);
   box-shadow: var(--sh3);
-  padding: 28px 20px 28px;
+  padding: 24px 16px; /* ★ Safe 16px side padding */
   text-align: center;
 }
 
-/* ★ Slightly smaller icon for mobile */
 .lp__card-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 44px; height: 44px;
   background: var(--t1);
-  border-radius: 14px;
+  border-radius: 12px;
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .lp__card-title {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: -0.03em;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .lp__card-sub {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--t2);
   line-height: 1.5;
-  margin-bottom: 24px;
-}
-
-.lp__card-action {
-  display: flex;
-  justify-content: center;
   margin-bottom: 20px;
 }
 
+/* ★ CRITICAL WRAPPER: Safely handles the Google button width */
+.lp__card-action {
+  display: flex;
+  justify-content: center;
+  overflow: hidden; /* Prevents overflow from breaking layout */
+  margin-bottom: 16px;
+  margin-left: -8px; /* Negates card padding so button can fit */
+  margin-right: -8px;
+  padding: 0 8px; /* Re-applies visual padding safely */
+}
+
 .lp__card-foot {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   font-weight: 500;
   color: var(--t3);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 /* ─── FOOTER (Matches Dashboard) ─── */
@@ -276,26 +277,53 @@ body {
   z-index: 10;
   padding: 24px 16px 20px;
   border-top: 1px solid var(--border-l);
+  width: 100%;
 }
 .lp__ftr-in {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--t3);
 }
 .lp__ftr-b { font-weight: 600; color: var(--t2); }
 .lp__ftr-d { color: var(--border); }
 
 /* ═══════════════════════════════════════════
+   RESPONSIVE: STANDARD PHONES (400px+)
+   ═══════════════════════════════════════════ */
+@media (min-width: 400px) {
+  .lp__hdr-inner { padding: 0 20px; height: 64px; }
+  .lp__logo { width: 32px; height: 32px; }
+  .lp__name { font-size: 1.05rem; }
+  
+  .lp__main { padding: 36px 20px; gap: 40px; }
+  
+  .lp__badge { font-size: 0.78rem; margin-bottom: 20px; }
+  .lp__title { font-size: 2rem; margin-bottom: 14px; }
+  .lp__desc { font-size: 0.9rem; margin-bottom: 28px; }
+  
+  .lp__features { gap: 16px; }
+  .lp__feat { gap: 12px; }
+  .lp__feat-icon { width: 38px; height: 38px; }
+  .lp__feat strong { font-size: 0.85rem; }
+  .lp__feat p { font-size: 0.78rem; }
+  
+  .lp__card { padding: 32px 24px; max-width: 420px; }
+  .lp__card-icon { width: 48px; height: 48px; margin-bottom: 20px; }
+  .lp__card-title { font-size: 1.2rem; margin-bottom: 8px; }
+  .lp__card-sub { font-size: 0.84rem; margin-bottom: 24px; }
+  .lp__card-action { margin-left: 0; margin-right: 0; padding: 0; margin-bottom: 24px; }
+  .lp__card-foot { font-size: 0.7rem; }
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVE: TABLET & DESKTOP SPLIT LAYOUT
    ═══════════════════════════════════════════ */
 @media (min-width: 768px) {
-  /* Match dashboard exact header sizing */
   .lp__hdr-inner { padding: 0 40px; height: 72px; }
   
-  /* Switch to 2-column grid */
   .lp__main {
     grid-template-columns: 1.2fr 0.8fr;
     gap: 60px;
@@ -307,65 +335,24 @@ body {
   .lp__desc { margin: 0 0 36px 0; }
   .lp__features { margin: 0; gap: 20px; }
   
-  /* Restore larger desktop card sizes */
-  .lp__card { padding: 48px 40px 40px; }
+  .lp__card { padding: 48px 40px 40px; max-width: 420px; }
   .lp__card-icon { width: 52px; height: 52px; margin-bottom: 24px; }
   .lp__card-title { font-size: 1.25rem; }
   .lp__card-sub { font-size: 0.85rem; margin-bottom: 32px; }
   .lp__card-action { margin-bottom: 28px; }
-  .lp__card-foot { font-size: 0.7rem; }
   
-  /* Restore larger desktop text sizes */
   .lp__title { font-size: 2.8rem; margin-bottom: 16px; }
   .lp__desc { font-size: 0.95rem; margin-bottom: 36px; }
   .lp__feat-icon { width: 40px; height: 40px; }
   .lp__feat strong { font-size: 0.88rem; }
   .lp__feat p { font-size: 0.8rem; }
-  .lp__badge { margin-bottom: 24px; }
 }
 
 /* ═══════════════════════════════════════════
    RESPONSIVE: LARGE DESKTOP
    ═══════════════════════════════════════════ */
 @media (min-width: 1024px) {
-  .lp__main {
-    padding: 60px 80px;
-    gap: 100px;
-  }
+  .lp__main { padding: 60px 80px; gap: 100px; }
   .lp__title { font-size: 3.4rem; }
   .lp__desc { font-size: 1.05rem; max-width: 520px; }
-}
-
-/* ═══════════════════════════════════════════
-   MOBILE MICRO-ADJUSTMENTS: < 400px
-   Perfect for iPhone SE / Small Androids
-   ═══════════════════════════════════════════ */
-@media (max-width: 400px) {
-  .lp__hdr-inner { padding: 0 16px; height: 56px; }
-  
-  .lp__main { 
-    padding: 24px 16px; 
-    gap: 24px; 
-  }
-  
-  .lp__title { font-size: 1.6rem; }
-  .lp__desc { font-size: 0.82rem; margin-bottom: 20px; }
-  
-  .lp__features { gap: 14px; }
-  .lp__feat { gap: 10px; }
-  .lp__feat-icon { width: 32px; height: 32px; }
-  .lp__feat-icon svg { width: 16px; height: 16px; }
-  .lp__feat strong { font-size: 0.8rem; }
-  .lp__feat p { font-size: 0.72rem; }
-  
-  .lp__card { padding: 24px 16px; }
-  .lp__card-icon { width: 40px; height: 40px; margin-bottom: 16px; }
-  .lp__card-title { font-size: 1.1rem; }
-  .lp__card-sub { margin-bottom: 20px; font-size: 0.78rem; }
-  
-  /* Shrink Google button slightly so it doesn't overflow */
-  .lp__card-action > div {
-    transform: scale(0.92);
-    transform-origin: center center;
-  }
 }
