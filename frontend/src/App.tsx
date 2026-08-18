@@ -25,7 +25,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
+  //const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
 
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("access_token")
