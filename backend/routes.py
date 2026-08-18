@@ -280,3 +280,74 @@ def google_login(
             profile_picture=user.profile_picture,
         ),
     )
+
+@internal_router.get("/debug-redis")
+def debug_redis(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    cron_secret = os.getenv("CRON_SECRET")
+
+    if credentials.credentials != cron_secret:
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized",
+        )
+
+    print("========== REDIS DATA ==========")
+
+    cursor = 0
+    total = 0
+
+    while True:
+        cursor, keys = redis_client.scan(
+            cursor=cursor,
+            match="*",
+            count=100,
+        )
+
+        for key in keys:
+            if isinstance(key, bytes):
+                key = key.decode()
+
+            value = redis_client.get(key)
+
+            if isinstance(value, bytes):
+                value = value.decode()
+
+            print(f"KEY: {key}")
+            print(f"VALUE: {value}")
+            print("-------------------------------")
+
+            total += 1
+
+        if cursor == 0:
+            break
+
+    print(f"TOTAL KEYS: {total}")
+    print("========== END REDIS DATA ==========")
+
+    return {
+        "message": "Redis data printed to Render logs",
+        "total_keys": total,
+    }
+
+
+@internal_router.delete("/clear-redis")
+def clear_redis(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
+    cron_secret = os.getenv("CRON_SECRET")
+
+    if credentials.credentials != cron_secret:
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized",
+        )
+
+    redis_client.flushdb()
+
+    print("========== REDIS CLEARED ==========")
+
+    return {
+        "message": "Redis cleared successfully",
+    }
