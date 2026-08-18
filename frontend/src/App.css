@@ -64,10 +64,22 @@ input{font-family:inherit}
 .hdr{position:sticky;top:0;z-index:50;background:rgba(244,245,247,0.82);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%)}
 .hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--vio),var(--blue));background-size:200% 100%;animation:grad 6s ease infinite}
 @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.hdr__bar{display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:1px solid var(--border-l)}
-.hdr__brand{display:flex;align-items:center;gap:8px}
-.hdr__logo{display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--t1);border-radius:var(--r2);color:#fff}
-.hdr__name{font-size:0.95rem;font-weight:700;letter-spacing:-0.02em}
+
+/* ★ Updated to match LoginPage placement exactly */
+.hdr__bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:64px;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+  border-bottom:1px solid var(--border-l);
+}
+
+.hdr__brand{display:flex;align-items:center;gap:10px}
+.hdr__logo{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--t1);border-radius:var(--r2);color:#fff}
+.hdr__name{font-size:1.05rem;font-weight:700;letter-spacing:-0.02em}
 .hdr__right{display:flex;align-items:center;gap:4px}
 
 /* Desktop user info — hidden below 768px */
@@ -131,6 +143,10 @@ input{font-family:inherit}
 .hdr__mob-drop-logout:hover{
   background:var(--red-sf);
 }
+
+/* ═══════════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════════ */
 
 /* ═══════════════════════════════════════════
    HERO
@@ -275,7 +291,6 @@ input{font-family:inherit}
   .st__body{justify-content:center}
   .sts{gap:14px;margin-bottom:32px}
 }
-
 /* ═══════════════════════════════════════════
    BP3: 768px — tablet
    ═══════════════════════════════════════════ */
@@ -286,11 +301,15 @@ input{font-family:inherit}
   .hdr__logout{display:flex}
   .hdr__mob-profile{display:none}
 
+  /* ★ Match login page exact padding and height */
+  .hdr__bar{height:72px;padding:0 40px}
+  .hdr__name{font-size:1.1rem}
+  
   .hero{padding:56px 0 40px}
   .hero__h{font-size:2.4rem}
   .hero__p{font-size:0.95rem;margin-bottom:34px}
   .frm__inp{height:52px;font-size:0.92rem}
-  .frm__btn{height:52px;min-width:170px;font-size:0.9rem}
+  .frm__btn{height:52px;min-width:160px;font-size:0.9rem}
   .sts{gap:16px;margin-bottom:36px}
   .st{padding:22px 20px;gap:16px}
   .st__ico{width:48px;height:48px}
@@ -305,15 +324,11 @@ input{font-family:inherit}
   .tb td{padding:14px 24px}
   .tb__ur{max-width:240px}
 }
-
 /* ═══════════════════════════════════════════
    BP4: 1024px — desktop
    ═══════════════════════════════════════════ */
 @media(min-width:1024px){
-  .wrap{padding-left:32px;padding-right:32px}
-  .hdr__bar{height:56px}
-  .hdr__logo{width:32px;height:32px}
-  .hdr__name{font-size:1rem}
+    .wrap{padding-left:32px;padding-right:32px}
   .hdr__avatar,.hdr__avatar-fb{width:30px;height:30px}
   .hdr__uname{font-size:0.85rem;max-width:140px}
 
