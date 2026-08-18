@@ -59,11 +59,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         
         {/* Left: The Story / Marketing Copy */}
         <section className="lp__story">
-          <div className="lp__badge">
-            <span className="lp__badge-dot"></span>
-            Now in public beta
-          </div>
-          
+         
           <h1 className="lp__title">
             Shorten your links.<br />
             <span className="lp__title-accent">Amplify your reach.</span>
@@ -85,18 +81,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
                 <p>Instant redirects with 99.9% uptime.</p>
               </div>
             </div>
-            
-            <div className="lp__feat">
-              <div className="lp__feat-icon lp__feat-icon--green">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-              </div>
-              <div>
-                <strong>Deep Analytics</strong>
-                <p>Track clicks, locations, and devices.</p>
-              </div>
-            </div>
+         
 
             <div className="lp__feat">
               <div className="lp__feat-icon lp__feat-icon--violet">
