@@ -25,7 +25,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [recentlyAdded, setRecentlyAdded] = useState<number | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
 
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("access_token")
@@ -73,8 +73,6 @@ function App() {
       await createShortUrl(url);
       setUrl("");
       await loadUrls();
-      setRecentlyAdded(Date.now());
-      setTimeout(() => setRecentlyAdded(null), 3000);
     } catch (err) {
       console.error(err);
       setError("Failed to shorten URL. Please check and try again.");
@@ -86,6 +84,8 @@ function App() {
   async function handleCopy(shortUrl: string, id: number) {
     try {
       await navigator.clipboard.writeText(shortUrl);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
     } catch {
       const textArea = document.createElement("textarea");
       textArea.value = shortUrl;
@@ -93,9 +93,9 @@ function App() {
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
     }
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2200);
   }
 
   function formatDate(dateStr: string) {
@@ -108,17 +108,9 @@ function App() {
     });
   }
 
-  function truncateUrl(urlStr: string, maxLen: number = 52) {
+  function truncateUrl(urlStr: string, maxLen: number = 50) {
     if (urlStr.length <= maxLen) return urlStr;
     return urlStr.substring(0, maxLen) + "…";
-  }
-
-  function getDomain(urlStr: string) {
-    try {
-      return new URL(urlStr).hostname;
-    } catch {
-      return urlStr;
-    }
   }
 
   useEffect(() => {
@@ -131,82 +123,65 @@ function App() {
     return <LoginPage onLogin={handleLogin} />;
   }
 
-  const totalClicks = urls.reduce((sum, u) => sum + u.click_count, 0);
-
   return (
-    <div className="app-shell">
-      {/* Ambient background elements */}
-      <div className="bg-layer">
-        <div className="bg-orb bg-orb-1"></div>
-        <div className="bg-orb bg-orb-2"></div>
-        <div className="bg-orb bg-orb-3"></div>
-        <div className="bg-grid"></div>
-      </div>
-
+    <div className="app-layout">
       {/* ─── HEADER ─── */}
       <header className="app-header">
-        <div className="header-glass">
-          <div className="header-inner">
-            <div className="header-brand">
-              <div className="brand-mark">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                </svg>
-              </div>
-              <span className="brand-name">Sniply</span>
+        <div className="header-inner">
+          <div className="header-brand">
+            <div className="brand-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
             </div>
+            <span className="brand-text">Sniply</span>
+          </div>
 
-            <div className="header-actions">
-              {user && (
-                <div className="header-user">
-                  <div className="user-avatar-ring">
-                    {user.profile_picture ? (
-                      <img src={user.profile_picture} alt="" className="user-avatar" />
-                    ) : (
-                      <div className="user-avatar-fallback">
-                        {(user.name || user.email).charAt(0).toUpperCase()}
-                      </div>
-                    )}
+          <div className="header-right">
+            {user && (
+              <div className="user-pill">
+                {user.profile_picture ? (
+                  <img
+                    src={user.profile_picture}
+                    alt={user.name || "User"}
+                    className="user-avatar"
+                  />
+                ) : (
+                  <div className="user-avatar-fallback">
+                    {(user.name || user.email).charAt(0).toUpperCase()}
                   </div>
-                  <div className="user-meta">
-                    <span className="user-meta-name">{user.name || "User"}</span>
-                    <span className="user-meta-email">{user.email}</span>
-                  </div>
+                )}
+                <div className="user-info">
+                  <span className="user-name">{user.name || "User"}</span>
+                  <span className="user-email">{user.email}</span>
                 </div>
-              )}
-              <button className="btn-icon btn-logout" onClick={handleLogout} title="Sign out">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-              </button>
-            </div>
+                <button className="btn-logout" onClick={handleLogout} title="Logout">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
       {/* ─── MAIN ─── */}
       <main className="app-main">
-        {/* Hero */}
-        <section className="hero">
-          <div className="hero-badge">
-            <span className="hero-badge-dot"></span>
-            Fast & reliable
-          </div>
-          <h1 className="hero-heading">
-            Shorten links.<br />
-            <span className="hero-heading-accent">Amplify reach.</span>
-          </h1>
-          <p className="hero-desc">
-            Transform long, unwieldy URLs into clean short links. Track every click with real-time analytics.
-          </p>
+        {/* Hero / Input Section */}
+        <section className="hero-section">
+          <div className="hero-content">
+            <h1 className="hero-title">Shorten your links</h1>
+            <p className="hero-subtitle">
+              Paste a long URL to create a short, shareable link instantly.
+            </p>
 
-          <form className="shorten-form" onSubmit={handleShorten}>
-            <div className="input-group">
-              <div className="input-field">
-                <svg className="input-field-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <form className="shorten-form" onSubmit={handleShorten}>
+              <div className="input-wrapper">
+                <svg className="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                 </svg>
@@ -214,173 +189,144 @@ function App() {
                   type="url"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Paste your URL here..."
-                  className="input-text"
+                  placeholder="https://example.com/your-long-url"
+                  className="url-input"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="btn-primary"
+                className="btn-shorten"
                 disabled={loading || !url.trim()}
               >
                 {loading ? (
-                  <>
-                    <span className="spin-sm"></span>
-                    Processing
-                  </>
-                ) : recentlyAdded ? (
-                  <>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    Done
-                  </>
+                  <span className="btn-loading">
+                    <span className="spinner"></span>
+                    Shortening…
+                  </span>
                 ) : (
-                  "Shorten URL"
+                  "Shorten"
                 )}
               </button>
-            </div>
-          </form>
+            </form>
 
-          {error && (
-            <div className="error-toast">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-              {error}
-            </div>
-          )}
-        </section>
-
-        {/* Stats */}
-        <section className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-card-icon stat-card-icon--blue">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-              </svg>
-            </div>
-            <div className="stat-card-body">
-              <span className="stat-card-value">{urls.length}</span>
-              <span className="stat-card-label">Total Links</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-card-icon stat-card-icon--emerald">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg>
-            </div>
-            <div className="stat-card-body">
-              <span className="stat-card-value">{totalClicks}</span>
-              <span className="stat-card-label">Total Clicks</span>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-card-icon stat-card-icon--violet">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="20" x2="12" y2="10" />
-                <line x1="18" y1="20" x2="18" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="16" />
-              </svg>
-            </div>
-            <div className="stat-card-body">
-              <span className="stat-card-value">
-                {urls.length > 0 ? (totalClicks / urls.length).toFixed(1) : "0"}
-              </span>
-              <span className="stat-card-label">Avg. Clicks</span>
-            </div>
+            {error && (
+              <div className="error-banner">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="15" y1="9" x2="9" y2="15" />
+                  <line x1="9" y1="9" x2="15" y2="15" />
+                </svg>
+                {error}
+              </div>
+            )}
           </div>
         </section>
 
-        {/* URL List */}
-        <section className="links-section">
-          <div className="links-section-header">
-            <div>
-              <h2 className="links-section-title">Your Links</h2>
-              <p className="links-section-subtitle">Manage and monitor your shortened URLs</p>
-            </div>
-            <button className="btn-ghost" onClick={loadUrls}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        {/* Stats Bar */}
+        <section className="stats-bar">
+          <div className="stat-item">
+            <span className="stat-value">{urls.length}</span>
+            <span className="stat-label">Total Links</span>
+          </div>
+          <div className="stat-divider"></div>
+          <div className="stat-item">
+            <span className="stat-value">
+              {urls.reduce((sum, u) => sum + u.click_count, 0)}
+            </span>
+            <span className="stat-label">Total Clicks</span>
+          </div>
+        </section>
+
+        {/* URL List Section */}
+        <section className="urls-section">
+          <div className="section-header">
+            <h2 className="section-title">Your Links</h2>
+            <button className="btn-refresh" onClick={loadUrls} title="Refresh">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="23 4 23 10 17 10" />
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
               </svg>
-              Refresh
             </button>
           </div>
 
           {urls.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-state-visual">
-                <div className="empty-state-ring">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-                  </svg>
-                </div>
+              <div className="empty-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
               </div>
-              <h3 className="empty-state-title">No links created yet</h3>
-              <p className="empty-state-desc">
-                Paste any URL above and hit <strong>Shorten URL</strong> to get started.
+              <h3 className="empty-title">No links yet</h3>
+              <p className="empty-text">
+                Paste a URL above to create your first shortened link.
               </p>
             </div>
           ) : (
-            <>
-              {/* Desktop table view */}
-              <div className="links-table-wrap">
-                <table className="links-table">
+            <div className="urls-list">
+              {/* Desktop Table */}
+              <div className="urls-table-wrapper">
+                <table className="urls-table">
                   <thead>
                     <tr>
                       <th>Original URL</th>
                       <th>Short Link</th>
                       <th>Clicks</th>
                       <th>Created</th>
-                      <th></th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {urls.map((item) => (
-                      <tr key={item.id} className="link-row">
-                        <td className="link-cell-orig">
-                          <span className="link-domain-badge">{getDomain(item.original_url)}</span>
-                          <span className="link-orig-text" title={item.original_url}>
-                            {truncateUrl(item.original_url, 48)}
-                          </span>
+                      <tr key={item.id}>
+                        <td className="td-original" title={item.original_url}>
+                          {truncateUrl(item.original_url, 55)}
                         </td>
-                        <td className="link-cell-short">
-                          <a href={item.short_url} target="_blank" rel="noreferrer" className="link-short-url">
+                        <td className="td-short">
+                          <a
+                            href={item.short_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="short-link"
+                          >
                             {item.short_url}
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M7 17L17 7" /><path d="M7 7h10v10" />
-                            </svg>
                           </a>
                         </td>
-                        <td className="link-cell-clicks">
-                          <span className="click-count">{item.click_count}</span>
+                        <td className="td-clicks">
+                          <span className="click-badge">{item.click_count}</span>
                         </td>
-                        <td className="link-cell-date">{formatDate(item.created_at)}</td>
-                        <td className="link-cell-actions">
+                        <td className="td-date">{formatDate(item.created_at)}</td>
+                        <td className="td-actions">
                           <button
-                            className={`btn-copy-sm ${copiedId === item.id ? "is-copied" : ""}`}
+                            className={`btn-copy ${copiedId === item.id ? "copied" : ""}`}
                             onClick={() => handleCopy(item.short_url, item.id)}
                           >
                             {copiedId === item.id ? (
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
+                              <>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                Copied
+                              </>
                             ) : (
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                              </svg>
+                              <>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                                Copy
+                              </>
                             )}
                           </button>
-                          <a href={item.short_url} target="_blank" rel="noreferrer" className="btn-icon-sm" title="Open link">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <a
+                            href={item.short_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-visit"
+                            title="Visit link"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                               <polyline points="15 3 21 3 21 9" />
                               <line x1="10" y1="14" x2="21" y2="3" />
@@ -393,58 +339,86 @@ function App() {
                 </table>
               </div>
 
-              {/* Mobile card view */}
-              <div className="links-cards">
+              {/* Mobile Cards */}
+              <div className="urls-cards">
                 {urls.map((item) => (
-                  <div key={item.id} className="link-card">
-                    <div className="link-card-header">
-                      <span className="link-domain-badge">{getDomain(item.original_url)}</span>
-                      <span className="link-card-date">{formatDate(item.created_at)}</span>
-                    </div>
-                    <p className="link-card-orig" title={item.original_url}>
-                      {truncateUrl(item.original_url, 55)}
-                    </p>
-                    <div className="link-card-bottom">
-                      <a href={item.short_url} target="_blank" rel="noreferrer" className="link-card-short">
-                        {item.short_url}
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 17L17 7" /><path d="M7 7h10v10" />
-                        </svg>
+                  <div key={item.id} className="url-card">
+                    <div className="card-row">
+                      <span className="card-label">Original</span>
+                      <a
+                        href={item.original_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="card-original-link"
+                        title={item.original_url}
+                      >
+                        {truncateUrl(item.original_url, 45)}
                       </a>
-                      <div className="link-card-right">
-                        <span className="click-count">{item.click_count} clicks</span>
+                    </div>
+                    <div className="card-row">
+                      <span className="card-label">Short</span>
+                      <a
+                        href={item.short_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="card-short-link"
+                      >
+                        {item.short_url}
+                      </a>
+                    </div>
+                    <div className="card-footer">
+                      <div className="card-meta">
+                        <span className="click-badge">{item.click_count} clicks</span>
+                        <span className="card-date">{formatDate(item.created_at)}</span>
+                      </div>
+                      <div className="card-actions">
                         <button
-                          className={`btn-copy-sm ${copiedId === item.id ? "is-copied" : ""}`}
+                          className={`btn-copy ${copiedId === item.id ? "copied" : ""}`}
                           onClick={() => handleCopy(item.short_url, item.id)}
                         >
                           {copiedId === item.id ? (
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
+                            <>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              Copied
+                            </>
                           ) : (
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                            </svg>
+                            <>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                              </svg>
+                              Copy
+                            </>
                           )}
                         </button>
+                        <a
+                          href={item.short_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn-visit"
+                          title="Visit link"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                          </svg>
+                        </a>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
         </section>
       </main>
 
-      {/* Footer */}
+      {/* ─── FOOTER ─── */}
       <footer className="app-footer">
-        <div className="footer-inner">
-          <span className="footer-brand">Sniply</span>
-          <span className="footer-dot"></span>
-          <span>© {new Date().getFullYear()} All rights reserved.</span>
-        </div>
+        <p>© {new Date().getFullYear()} Sniply. All rights reserved.</p>
       </footer>
     </div>
   );
