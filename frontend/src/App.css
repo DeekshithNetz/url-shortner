@@ -65,7 +65,7 @@ input{font-family:inherit}
 .hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--vio),var(--blue));background-size:200% 100%;animation:grad 6s ease infinite}
 @keyframes grad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 
-/* ★ Updated to match LoginPage placement exactly */
+/* ★ 20px base padding is safer for 320px screens, scales up in BP3 */
 .hdr__bar{
   display:flex;
   align-items:center;
@@ -73,7 +73,7 @@ input{font-family:inherit}
   height:64px;
   max-width:1200px;
   margin:0 auto;
-  padding:0 24px;
+  padding:0 20px;
   border-bottom:1px solid var(--border-l);
 }
 
@@ -147,16 +147,12 @@ input{font-family:inherit}
 /* ═══════════════════════════════════════════
    HERO
    ═══════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════
-   HERO
-   ═══════════════════════════════════════════ */
 .hero{text-align:center;padding:36px 0 28px}
 .hero__h{font-size:1.75rem;font-weight:800;letter-spacing:-0.04em;line-height:1.12;color:var(--t1);margin-bottom:10px}
 .hero__a{color:var(--blue)}
 .hero__p{font-size:0.88rem;color:var(--t2);line-height:1.6;max-width:400px;margin:0 auto 26px}
 
-/* ─── FORM (NO max-width cap here anymore) ─── */
+/* ─── FORM ─── */
 .frm{display:flex;flex-direction:column;gap:8px;width:100%;margin:0 auto}
 .frm__field{position:relative;display:flex;align-items:center}
 .frm__ico{position:absolute;left:14px;color:var(--t3);pointer-events:none;flex-shrink:0}
@@ -259,7 +255,7 @@ input{font-family:inherit}
 /* ═══════════════════════════════════════════
    FOOTER
    ═══════════════════════════════════════════ */
-.ftr{padding:20px 0;border-top:1px solid var(--border-l)}
+.ftr{padding:24px 16px 20px;border-top:1px solid var(--border-l)}
 .ftr__in{display:flex;align-items:center;justify-content:center;gap:8px;font-size:0.72rem;color:var(--t3)}
 .ftr__b{font-weight:600;color:var(--t2)}
 
@@ -284,13 +280,14 @@ input{font-family:inherit}
 @media(min-width:640px){
   .wrap{padding-left:24px;padding-right:24px}
   .frm{flex-direction:row;gap:10px}
-  .frm__field{flex:1} /* ★ THIS FORCES THE INPUT TO STRETCH FULL WIDTH */
+  .frm__field{flex:1}
   .frm__btn{width:auto;min-width:160px}
   .st{flex-direction:row;text-align:left;gap:14px;padding:18px 18px}
   .st__ico{margin-bottom:0}
   .st__body{justify-content:center}
   .sts{gap:14px;margin-bottom:32px}
 }
+
 /* ═══════════════════════════════════════════
    BP3: 768px — tablet
    ═══════════════════════════════════════════ */
@@ -301,7 +298,6 @@ input{font-family:inherit}
   .hdr__logout{display:flex}
   .hdr__mob-profile{display:none}
 
-  /* ★ Match login page exact padding and height */
   .hdr__bar{height:72px;padding:0 40px}
   .hdr__name{font-size:1.1rem}
   
@@ -324,11 +320,12 @@ input{font-family:inherit}
   .tb td{padding:14px 24px}
   .tb__ur{max-width:240px}
 }
+
 /* ═══════════════════════════════════════════
    BP4: 1024px — desktop
    ═══════════════════════════════════════════ */
 @media(min-width:1024px){
-    .wrap{padding-left:32px;padding-right:32px}
+  .wrap{padding-left:32px;padding-right:32px}
   .hdr__avatar,.hdr__avatar-fb{width:30px;height:30px}
   .hdr__uname{font-size:0.85rem;max-width:140px}
 
@@ -362,4 +359,37 @@ input{font-family:inherit}
   .tb__ur{max-width:360px}
   .tb th{padding:12px 32px}
   .tb td{padding:16px 32px}
+}
+
+/* ═══════════════════════════════════════════
+   MOBILE MICRO-ADJUSTMENTS: < 400px
+   Ensures nothing breaks on iPhone SE / small Androids
+   ═══════════════════════════════════════════ */
+@media(max-width: 400px){
+  .hdr__bar{padding:0 16px}
+  
+  .hero{padding:28px 0 20px}
+  .hero__h{font-size:1.55rem}
+  .hero__p{font-size:0.82rem;margin-bottom:20px}
+
+  .sts{gap:8px;margin-bottom:24px}
+  .st{padding:12px 8px}
+  .st__v{font-size:1.15rem}
+  .st__l{font-size:0.6rem}
+
+  .lks{border-radius:var(--r4)}
+  .lks__hd{padding:14px 12px 10px}
+  
+  .cd{padding:12px 12px}
+  
+  /* Stack card bottom row so long links don't crush the copy button */
+  .cd__bot{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .cd__r{
+    width: 100%;
+    justify-content: space-between;
+  }
 }
