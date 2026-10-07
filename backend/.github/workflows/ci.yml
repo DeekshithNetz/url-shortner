@@ -34,5 +34,7 @@ jobs:
           python -m compileall .
 
       - name: Run tests
+        env:
+          REDIS_URL: redis://localhost:6379
         run: |
           pytest -v
